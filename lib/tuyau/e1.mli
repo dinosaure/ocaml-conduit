@@ -1,6 +1,4 @@
-module type FUNCTOR = sig type 'a t end
-
-module Make (K : FUNCTOR) (V : FUNCTOR) : sig
+module Make (K : Sigs.FUNCTOR) (V : Sigs.FUNCTOR) : sig
   type 'a key
 
   module Key : sig

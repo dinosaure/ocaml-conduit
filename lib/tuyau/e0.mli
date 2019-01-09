@@ -1,6 +1,4 @@
-module type FUNCTOR = sig type 'a t end
-
-module Make (K : FUNCTOR) : sig
+module Make (K : Sigs.FUNCTOR) : sig
   (* XXX(dinosaure): only on [>= 4.06.0] *)
   type t = private ..
 

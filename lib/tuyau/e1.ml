@@ -1,4 +1,4 @@
-module type FUNCTOR = sig type 'a t end
+(* (c) Daniel Bünzli *)
 
 module Refl = struct
   type ('a, 'b) t = Refl : ('a, 'a) t
@@ -26,7 +26,7 @@ let eq : type a b. a t -> b t -> (a, b) Refl.t option =
     | B.T -> Some Refl.Refl
     | _ -> None
 
-module Make (K : FUNCTOR) (V : FUNCTOR) = struct
+module Make (K : Sigs.FUNCTOR) (V : Sigs.FUNCTOR) = struct
   module Key = struct
     type 'a info = 'a K.t
     type 'a key = { uid : int; tid : 'a t; info : 'a K.t }

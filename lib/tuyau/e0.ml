@@ -1,8 +1,6 @@
 (* (c) Frédéric Bour *)
 
-module type FUNCTOR = sig type 'a t end
-
-module Make (K : FUNCTOR) = struct
+module Make (K : Sigs.FUNCTOR) = struct
   type t = ..
 
   module type Extension = sig
