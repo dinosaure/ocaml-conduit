@@ -15,6 +15,9 @@ type ('resolved, 'endpoint) service =
 
 type 'e scheme
 
+type endpoint
+
 val add : 'r Resolver.resolver -> ('r, 'e) service -> 'e scheme
-val resolve : Domain_name.t -> Resolver.t -> 'e scheme -> 'e -> 'e io
+val endpoint : 'e scheme -> 'e -> endpoint
+val resolve : Domain_name.t -> Resolver.t -> 'e scheme -> endpoint -> endpoint option io
 

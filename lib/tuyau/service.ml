@@ -38,16 +38,17 @@ let endpoint : type e. e scheme -> e -> endpoint =
     let module Scheme = (val scheme) in
     Scheme.T endpoint
 
-module Refl = struct type ('a, 'b) t = Refl : ('a, 'a) t end
-
 let resolve
   : type e. Domain_name.t -> Resolver.t -> e scheme -> endpoint -> endpoint option io
   = fun domain m scheme endpoint ->
-    let module Scheme = (val scheme) in
-    let Dispatch.V (e, binding) = Dispatch.prj endpoint in
-    let Service.B (resolver, service) = binding in
-    match Resolver.resolve domain resolver m with
+    match Dispatch.extract endpoint scheme with
     | None -> None
-    | Some v ->
-      let _e = service.init v e in
-      assert false (* should return (Scheme.T e) *)
+    | Some e ->
+      let module Scheme = (val scheme) in
+      let binding = Scheme.instance in
+      let Service.B (resolver, service) = binding in
+      match Resolver.resolve domain resolver m with
+      | None -> None
+      | Some v ->
+        let _e = service.init v e in
+        return (Some (Scheme.T e))

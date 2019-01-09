@@ -7,6 +7,8 @@ module Make (K : FUNCTOR) : sig
   module type Extension = sig
     type x
     type t += T of x
+
+    val instance : x K.t
   end
 
   type 'a extension = (module Extension with type x = 'a)
@@ -20,4 +22,5 @@ module Make (K : FUNCTOR) : sig
 
   val inj : 'a K.t -> 'a extension
   val prj : t -> instance
+  val extract : t -> 'a extension -> 'a option
 end
