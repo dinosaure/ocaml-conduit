@@ -1,0 +1,4 @@
+(library
+ (name tuyau)
+ (public_name conduit.tuyau)
+ (libraries fmt domain-name))
