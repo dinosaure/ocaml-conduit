@@ -1,0 +1,11 @@
+(library
+ (name conduit_lwt)
+ (public_name conduit-lwt)
+ (modules conduit_lwt)
+ (libraries conduit-lwt.core lwt.unix))
+
+(library
+ (name conduit_lwt_core)
+ (public_name conduit-lwt.core)
+ (modules conduit_lwt_core)
+ (libraries cstruct lwt conduit))

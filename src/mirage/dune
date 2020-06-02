@@ -1,0 +1,6 @@
+(library
+ (name conduit_mirage)
+ (public_name conduit-mirage)
+ (modules conduit_mirage)
+ (libraries conduit conduit-lwt.core dns-client.mirage mirage-flow ke
+   tcpip.tcp bigstringaf))
