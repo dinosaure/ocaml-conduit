@@ -46,9 +46,9 @@ let without_tuyau () =
   |> R.reword_error (R.msgf "%a" Protocol.pp_error) >>= fun _len ->
   R.ok (Int64.sub !flow t0)
 
-let () = match with_tuyau (), without_tuyau () with
+let () = match without_tuyau (), with_tuyau () with
   | Ok ts0, Ok ts1 ->
-    Fmt.pr "with conduit: %Ld tick(s).\n%!" ts0 ;
-    Fmt.pr "without conduit: %Ld tick(s).\n%!" ts1
+    Fmt.pr "without conduit: %Ld tick(s).\n%!" ts0 ;
+    Fmt.pr "with conduit: %Ld tick(s).\n%!" ts1
   | Error err, _ -> Fmt.epr "%a.\n%!" Tuyau.pp_error err
   | _, Error _ -> assert false (* safe *)

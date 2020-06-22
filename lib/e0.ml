@@ -29,9 +29,9 @@ module Make (Key : Sigs.FUNCTOR) = struct
     let module B = (val b : S with type x = b) in
     match A.Id with B.Id -> Some Refl | _ -> None
 
-  let handlers = Hashtbl.create 16
+  let handlers = Hashtbl.create ~random:false 16
 
-  let witnesses = Hashtbl.create 16
+  let witnesses = Hashtbl.create ~random:false 16
 
   module Injection (X : sig
     type t
@@ -45,18 +45,19 @@ module Make (Key : Sigs.FUNCTOR) = struct
     type _ id += Id : x id
 
     let witness = X.witness
+    let key = Key (witness, fun x -> T x)
+    let value x = Value (x, witness)
 
     let handler = function
-      | T x -> Value (x, witness)
+      | T x -> value x
       | _ -> raise_notrace Not_found
 
-    let value = Key (witness, fun x -> T x)
 
     let () =
       let[@warning "-3"] uid =
         Stdlib.Obj.extension_id [%extension_constructor T] in
       Hashtbl.add handlers uid handler ;
-      Hashtbl.add witnesses uid value
+      Hashtbl.add witnesses uid key
   end
 
   let inj (type a) (k : a Key.t) : a s =
@@ -69,10 +70,15 @@ module Make (Key : Sigs.FUNCTOR) = struct
   let prj (t : t) =
     let rec go = function
       | [] -> assert false (* totality *)
-      | f :: r -> try f t with Not_found -> go r in
-    go
-      (Hashtbl.find_all handlers
-         Stdlib.Obj.((extension_id (extension_constructor t) [@warning "-3"])))
+      | f :: r -> try f t with Not_found -> (go[@tailcall]) r in
+    let uid = Stdlib.Obj.((extension_id (extension_constructor t) [@warning "-3"])) in
+    go (Hashtbl.find_all handlers uid)
+
+  (*
+  let prj (t : t) =
+    let uid = Stdlib.Obj.((extension_id (extension_constructor t) [@warning "-3"])) in
+    (Hashtbl.find handlers uid) t
+  *)
 
   let extract (t : t) (type a) ((module S) : a s) : a option =
     match t with S.T x -> Some x | _ -> None

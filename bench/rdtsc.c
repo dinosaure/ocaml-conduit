@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <time.h>
 
 #include <caml/mlvalues.h>
 #include <caml/memory.h>
@@ -13,10 +14,24 @@
 uint64_t
 get_tick(__unit ())
 {
+  struct timespec ts;
+
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+
+  return ((uint64_t) ts.tv_sec
+          * (uint64_t) 1000000000LL
+          + (uint64_t) ts.tv_nsec);
+}
+
+/*
+
+uint64_t
+get_tick(__unit ())
+{
   unsigned hi, lo;
   __asm__ __volatile__ ("rdtsc" : "=a"(lo), "=d"(hi));
 
   return (((unsigned long long) lo) | (((unsigned long long) hi) << 32));
 }
 
-
+*/
