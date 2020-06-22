@@ -1,6 +1,6 @@
 (executable
  (name cost)
- (libraries conduit rresult fmt)
+ (libraries conduit unix rresult fmt)
  (foreign_stubs
   (language c)
   (names rdtsc)))
