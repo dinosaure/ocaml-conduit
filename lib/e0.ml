@@ -46,13 +46,17 @@ module Make (Key : Sigs.FUNCTOR) = struct
 
     let witness = X.witness
 
+    let handler = function
+      | T x -> Value (x, witness)
+      | _ -> raise_notrace Not_found
+
+    let value = Key (witness, fun x -> T x)
+
     let () =
       let[@warning "-3"] uid =
         Stdlib.Obj.extension_id [%extension_constructor T] in
-      Hashtbl.add handlers uid (function
-        | T x -> Value (x, witness)
-        | _ -> raise Not_found) ;
-      Hashtbl.add witnesses uid (Key (witness, fun x -> T x))
+      Hashtbl.add handlers uid handler ;
+      Hashtbl.add witnesses uid value
   end
 
   let inj (type a) (k : a Key.t) : a s =
