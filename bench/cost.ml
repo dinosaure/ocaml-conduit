@@ -109,9 +109,9 @@ let run () =
   match Linear_algebra.ols (fun m -> m.(1)) [|(fun m -> m.(0))|] samples0,
         Linear_algebra.ols (fun m -> m.(1)) [|(fun m -> m.(0))|] samples1 with
   | Ok (estimate0, r0), Ok (estimate1, r1) ->
-    Fmt.pr "with Conduit:\t%fns (r²: %f).\n%!" estimate0.(0) r0 ;
+    Fmt.pr "with Conduit:\t\t%fns (r²: %f).\n%!" estimate0.(0) r0 ;
     Fmt.pr "without Conduit:\t%fns (r²: %f).\n%!" estimate1.(0) r1 ;
-    if r0 >= 0.99 && r1 >= 0.99 then Fmt.pr "Overhead:\t%fns" (estimate0.(0) -. estimate1.(0))
+    if r0 >= 0.99 && r1 >= 0.99 then Fmt.pr "Overhead:\t\t%fns.\n%!" (estimate0.(0) -. estimate1.(0))
     else Fmt.epr "Bad regression coefficients!\n%!" ;
     Ok ()
   | Error err, _ -> Error err
